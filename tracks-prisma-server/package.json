@@ -1,0 +1,79 @@
+{
+  "name": "tracks-prisma-server",
+  "license": "MIT",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development tsnd --no-notify --respawn --transpile-only ./src",
+    "test": "dotenv -e .env.test -- jest --watch --runInBand",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "postinstall": "npm run build",
+    "debug": "tsnd --inspect --respawn --transpile-only ./src",
+    "prebuild": "run-s clean generate:*",
+    "lint": "eslint 'src/**/*.{js,ts}'",
+    "seed": "dotenv -- ts-node prisma/seed.ts",
+    "clean": "rimraf dist",
+    "generate": "npm run generate:prisma && npm run generate:nexus",
+    "generate:prisma": "prisma generate",
+    "generate:nexus": "ts-node --transpile-only ./src/schema",
+    "db:create": "npx prisma db push --preview-feature",
+    "db:test:create": "dotenv -e .env.test -- npx prisma db push --preview-feature",
+    "db:test:reset": "dotenv -e .env.test -- npx prisma db push --force --schema=./prisma/reset.prisma --preview-feature",
+    "db:prod:create": "dotenv -e .env.prod -- npx prisma db push --preview-feature",
+    "prisma": "dotenv -- prisma"
+  },
+  "dependencies": {
+    "apollo-server": "2.19.0",
+    "bcrypt": "5.0.0",
+    "graphql-middleware": "6.0.0",
+    "graphql-shield": "7.4.4",
+    "jsonwebtoken": "8.5.1",
+    "nexus": "1.0.0",
+    "nexus-plugin-prisma": "0.27.0",
+    "@prisma/client": "2.13.1"
+  },
+  "devDependencies": {
+    "@prisma/cli": "2.13.1",
+    "@types/bcrypt": "3.0.0",
+    "@types/dotenv": "8.2.0",
+    "@types/eslint": "7.2.6",
+    "@types/jest": "26.0.19",
+    "@types/jsonwebtoken": "8.5.0",
+    "@types/node": "14.14.14",
+    "@types/prettier": "2.1.5",
+    "@types/rimraf": "3.0.0",
+    "@typescript-eslint/eslint-plugin": "4.10.0",
+    "@typescript-eslint/parser": "4.10.0",
+    "cross-env": "7.0.3",
+    "dotenv": "8.2.0",
+    "dotenv-cli": "4.0.0",
+    "eslint": "7.16.0",
+    "eslint-config-prettier": "7.1.0",
+    "graphql-request": "3.3.0",
+    "husky": "4.3.6",
+    "jest": "26.6.3",
+    "jest-environment-node": "26.6.2",
+    "lint-staged": "10.5.3",
+    "nanoid": "3.1.20",
+    "npm-run-all": "4.1.5",
+    "prettier": "2.2.1",
+    "rimraf": "3.0.2",
+    "ts-jest": "26.4.4",
+    "ts-node": "9.1.1",
+    "ts-node-dev": "1.1.1",
+    "typescript": "4.1.3",
+    "typesync": "0.8.0"
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts}": "npm run lint",
+    "*.{ts,js,json,md}": "prettier --write"
+  }
+}
